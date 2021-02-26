@@ -1,12 +1,25 @@
-import React from "react"
-import { TextInput, Text, StyleSheet } from "react-native"
+import React, { useState, useContext } from "react"
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StyleSheet, Text } from "react-native"
 import styled from "styled-components/native"
+import { DictionaryContext } from "../../DictionaryContext";
 
 export const GameScreen = () => {
+    const [word, setWord] = useState<undefined | string>();
+    const [translation, setTranslation] = useState<undefined | string>();
+    const { addWord } = useContext(DictionaryContext);
+    const onSubmit = () => {
+        addWord(word!, translation!)
+    }
+
     return (
         <Container behavior="padding">
-         <Title >enter your first word</Title>
-         <WordInput />
+         <Title >full your word and translation</Title>
+         <WordInput  value={word} placeholder="word" onChange={({nativeEvent:{ text }}) => setWord(text)}/>
+         <WordInput  value={translation} placeholder="translation"onChange={({nativeEvent:{ text }}) => setTranslation(text)}/>
+         <SubmitButton onPress={onSubmit}>
+            <Text> submit</Text>
+         </SubmitButton>
         </Container>
     )
   }
@@ -25,7 +38,18 @@ export const GameScreen = () => {
 
   const WordInput = styled.TextInput(({theme})=>({
     width:'80%', 
-    height: 32,
-    borderBottomColor: theme.colors.secondary,
+    fontSize: 24,
+    marginVertical: 24,
+    padding: 8,
+    color:'white',
+    borderBottomColor: theme.colors.supportive,
     borderBottomWidth: StyleSheet.hairlineWidth
+  }));
+
+  const SubmitButton = styled.Pressable(({theme})=>({
+    backgroundColor: theme.colors.secondary,
+    fontSize: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    borderRadius: 12
   }));
